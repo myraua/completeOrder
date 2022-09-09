@@ -78,8 +78,7 @@ public class TestCases extends WebDrivers {
         afterLogOutPage.clickLogIn2();
         Thread.sleep(3000);
         Assert.assertTrue(loginPage.isEmailFieldPresent());
-        Assert.assertTrue(loginPage.isPasswordFieldEmpty()); //Assertion that password is not cached!
+        Assert.assertTrue(loginPage.isPasswordFieldEmpty()); //Assertion that password is not cached! - had bug here, can't reproduce
         driver.quit();
-        //If assertions fail > how to log them?
     }
 }

@@ -27,13 +27,6 @@ public class LoginPage extends WebDrivers {
         return this;
     }
 
-//    public String getElementTest(By locator) {
-//        WebElement locatorElement = driver.findElement(PASSWORD_FIELD);
-//        return locatorElement.getText();
-//    public void enterUserName(String user) {
-//        driver.findElement(USER_NAME).sendKeys(user);
-//    }
-
     //method to enter password
     public LoginPage enterPassword(String password) {
         driver.findElement(PASSWORD).sendKeys(password);
