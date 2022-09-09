@@ -1,7 +1,7 @@
 package tests;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
+import drivers.GetProperties;
+import drivers.WebDrivers;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.AfterLogOutPage;
@@ -9,15 +9,13 @@ import pages.HomePage;
 import pages.LoginPage;
 import pages.SignUpPage;
 
-public class TestCases {
+public class TestCases extends WebDrivers {
 
 
     @Test
-    void loginWithValidCreds() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+    public void loginWithValidCreds() throws InterruptedException {
+        GetProperties.url();
         driver.manage().window().maximize();
-        driver.get("https://www.hudl.com/login");
 
         //create an Object from LoginPage class
         LoginPage loginPage = new LoginPage(driver);
@@ -35,10 +33,9 @@ public class TestCases {
 
     @Test
     public static void verifySignUpLink() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+
+        GetProperties.url();
         driver.manage().window().maximize();
-        driver.get("https://www.hudl.com/login");
         LoginPage loginPage = new LoginPage(driver);
         SignUpPage signUpPage = new SignUpPage(driver);
         loginPage.clickSignUpLink();
@@ -49,12 +46,9 @@ public class TestCases {
 
     @Test
     public static void loginWithInvalidPassword() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
-        driver.manage().window().maximize();
-        driver.get("https://www.hudl.com/login");
 
-        //create an Object from LoginPage class
+        GetProperties.url();
+        driver.manage().window().maximize();
         LoginPage loginPage = new LoginPage(driver);
         String wrongEmail = "myroslava.rabynyuk@gmail.com";
         String password = "@Un8J6YZ4VJwjv";
@@ -68,12 +62,8 @@ public class TestCases {
 
     @Test
     public static void logOutNavigateToLoginPage() throws InterruptedException {
-        System.setProperty("webdriver.chrome.driver", "src/main/resources/chromedriver.exe");
-        WebDriver driver = new ChromeDriver();
+        GetProperties.url();
         driver.manage().window().maximize();
-        driver.get("https://www.hudl.com/login");
-
-        //create an Object from LoginPage class
         LoginPage loginPage = new LoginPage(driver);
         String email = "myroslava.rabynyuk@gmail.com";
         String password = "@Un8J6YZ4VJwjva";
@@ -92,10 +82,4 @@ public class TestCases {
         driver.quit();
         //If assertions fail > how to log them?
     }
-
-    //        Actions actions = new Actions(driver);
-//        actions.sendKeys(Keys.chord(Keys.LEFT_CONTROL, "a")).build().perform();
-//        String password1 = actions.sendKeys(Keys.chord(Keys.LEFT_CONTROL, "c"))
-//        String passwordText = loginPage.getElementTest(By.id("password"));
-//        System.out.println(passwordText);
 }

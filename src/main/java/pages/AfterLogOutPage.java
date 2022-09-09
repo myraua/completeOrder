@@ -1,13 +1,14 @@
 package pages;
 
+import drivers.WebDrivers;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-public class AfterLogOutPage {
+public class AfterLogOutPage extends WebDrivers {
     private static final By LOG_IN2 = By.cssSelector("[data-qa-id=login]");
 
-    WebDriver driver;
+   // WebDriver driver;
 
     public AfterLogOutPage(WebDriver driver) {
         this.driver = driver;
