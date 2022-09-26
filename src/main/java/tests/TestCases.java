@@ -2,83 +2,39 @@ package tests;
 
 import drivers.GetProperties;
 import drivers.WebDrivers;
+import org.apache.commons.codec.binary.Base64;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.testng.Assert;
 import org.testng.annotations.Test;
-import pages.AfterLogOutPage;
-import pages.HomePage;
-import pages.LoginPage;
-import pages.SignUpPage;
+import pages.*;
 
 public class TestCases extends WebDrivers {
 
-
     @Test
-    public void loginWithValidCreds() throws InterruptedException {
+    public void loginAndPurchase() throws InterruptedException {
         GetProperties.url();
         driver.manage().window().maximize();
-
-        //create an Object from LoginPage class
         LoginPage loginPage = new LoginPage(driver);
-        String user = "myroslava.rabynyuk@gmail.com";
-        String password = "@Un8J6YZ4VJwjva";
-        loginPage.enterEmail(user);
-        loginPage.enterPassword(password);
-        loginPage.clickLogin();
+        ProductPage productPage = loginPage.enterEmail("standard_user").enterPassword("secret_sauce").clickLogin();
         Thread.sleep(3000);
-        String actualUrl = driver.getCurrentUrl();
-        String expectedUrl = "https://www.hudl.com/home";
-        Assert.assertEquals(actualUrl, expectedUrl);
+        WebElement backpack = driver.findElement(By.cssSelector("button#add-to-cart-sauce-labs-backpack"));
+        productPage.addProductToCart(backpack);
+        CartPage cartPage = productPage.viewCart();
+        CheckoutPage checkoutPage = cartPage.performCheckout();
+        OverviewPage overviewPage = checkoutPage.
+                enterFirstName("Test").
+                enterLastName("Tester").
+                enterPostalCode("12345").
+                continueToConfirm();
+        SuccessPage successPage = overviewPage.completeOrder();
+        Assert.assertTrue(successPage.isThankYouPresent());
+        Assert.assertTrue(successPage.isOrderCompleted());
         driver.quit();
     }
 
-    @Test
-    public static void verifySignUpLink() throws InterruptedException {
-
-        GetProperties.url();
-        driver.manage().window().maximize();
-        LoginPage loginPage = new LoginPage(driver);
-        SignUpPage signUpPage = new SignUpPage(driver);
-        loginPage.clickSignUpLink();
-        Thread.sleep(3000);
-        Assert.assertTrue(signUpPage.isDemoPresent());
-        driver.quit();
-    }
-
-    @Test
-    public static void loginWithInvalidPassword() throws InterruptedException {
-
-        GetProperties.url();
-        driver.manage().window().maximize();
-        LoginPage loginPage = new LoginPage(driver);
-        String wrongEmail = "myroslava.rabynyuk@gmail.com";
-        String password = "@Un8J6YZ4VJwjv";
-        loginPage.enterEmail(wrongEmail);
-        loginPage.enterPassword(password);
-        loginPage.clickLogin();
-        Thread.sleep(3000);
-        Assert.assertTrue(loginPage.isErrorMessagePresent());
-        driver.quit();
-    }
-
-    @Test
-    public static void logOutNavigateToLoginPage() throws InterruptedException {
-        GetProperties.url();
-        driver.manage().window().maximize();
-        LoginPage loginPage = new LoginPage(driver);
-        String email = "myroslava.rabynyuk@gmail.com";
-        String password = "@Un8J6YZ4VJwjva";
-        loginPage.enterEmail(email);
-        loginPage.enterPassword(password);
-        loginPage.clickLogin();
-        Thread.sleep(3000);
-        HomePage homePage = new HomePage(driver);
-        homePage.logOut();
-        Thread.sleep(3000);
-        AfterLogOutPage afterLogOutPage = new AfterLogOutPage(driver);
-        afterLogOutPage.clickLogIn2();
-        Thread.sleep(3000);
-        Assert.assertTrue(loginPage.isEmailFieldPresent());
-        Assert.assertTrue(loginPage.isPasswordFieldEmpty()); //Assertion that password is not cached! - had bug here, can't reproduce
-        driver.quit();
+    public String decodePassword(String password) {
+        byte[] decodedString = Base64.decodeBase64(password);
+        return new String(decodedString); //does not return String ?
     }
 }
